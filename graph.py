@@ -29,6 +29,8 @@ def generate_graph():
         root.add_child(route_node)
 
     print("Fetching directions...")
+
+    directions_map = {}
     # get all directions
     for rt in route_map:
         res = requests.get(
@@ -37,7 +39,12 @@ def generate_graph():
         directions = res.json()["bustime-response"]["directions"]
 
         for dir in directions:
-            route_map[rt].add_child(Direction(dir))
+            if dir["id"] not in directions_map:
+                dir_node = Direction(dir)
+                directions_map[dir["id"]] = dir_node
+                root.add_child(dir_node)
+            route_map[rt].add_child(directions_map[dir["id"]])
+
 
     print("Fetching stops...")
     # get all stops for each route
@@ -59,6 +66,7 @@ def generate_graph():
                 if stop["stpid"] not in stop_map:
                     stop_node = BusStop(stop)
                     stop_map[stop["stpid"]] = stop_node
+                    root.add_child(stop_node)
                 else:
                     stop_node = stop_map[stop["stpid"]]
 

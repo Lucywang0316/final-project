@@ -19,7 +19,7 @@ def get_next_bus(rt, stop):
     return res.json()["bustime-response"]["prd"]
 
 
-def prompt_user(routes, route_map):
+def get_prediction(routes, route_map):
     """Prompts the user for a route and stop, then prints the next bus arrival time."""
     # prompt user for route
     print()
@@ -46,8 +46,3 @@ def prompt_user(routes, route_map):
         formatted_est_time = datetime.datetime.strptime(predictions[0]["prdtm"], "%Y%m%d %H:%M")
         print("The next bus will arrive at", formatted_est_time.strftime("%I:%M %p"))
 
-    print("Thank you for using the MBus bus time estimator! Do you want to try again? (y/n)")
-    if input() == "y":
-        prompt_user(routes, route_map)
-    else:
-        print("Goodbye!")
